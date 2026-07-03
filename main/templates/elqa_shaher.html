@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+body { background-color:#030b32; margin:0; padding:0; }
+.images-row { display:flex; justify-content:center; gap:150px; padding:30px 20px; }
+.image-card { background-color:#0d1a4a; padding:12px; display:flex; flex-direction:column; align-items:center; gap:10px; width:200px; border-radius:10px; box-shadow:0 4px 12px rgba(240,192,64,0.15); transition:transform 0.2s ease,box-shadow 0.2s ease; }
+.image-card:hover { transform:translateY(-4px); box-shadow:0 8px 20px rgba(240,192,64,0.3); }
+.image-card img { width:150px; height:150px; border-radius:50%; object-fit:cover; border:2px solid #f0c040; }
+.image-card .card-label { color:#f0c040; font-size:14px; font-family:'Noto Nastaliq Urdu',serif; direction:rtl; text-align:center; margin:0; }
+.image-card p { margin:0; font-size:13px; color:#aab0c4; text-align:center; }
+.section-divider { border:none; border-top:1px solid #f0c040; margin:10px 40px; opacity:0.3; }
+.dashboard { display:flex; flex-direction:column; align-items:center; gap:30px; padding:30px 20px; }
+.dashboard-top { display:flex; justify-content:flex-end; width:100%; }
+.dashboard-bottom { display:flex; justify-content:flex-start; align-items:flex-start; gap:30px; flex-wrap:wrap; width:100%; background-color:#0d1a4a; padding:30px 20px; border-radius:12px; }
+.box-wrapper { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.counter-label { color:#ffffff; font-size:12px; font-weight:bold; letter-spacing:1px; text-transform:uppercase; text-align:center; }
+.box { background-color:#0d1a4a; border:2px solid #f0c040; border-radius:12px; padding:16px; width:220px; display:flex; flex-direction:column; gap:14px; }
+.box select { background-color:#030b32; color:#f0c040; border:1.5px solid #f0c040; border-radius:8px; padding:10px; width:100%; direction:rtl; font-family:'Noto Nastaliq Urdu',serif; font-size:14px; }
+.box-actions { display:flex; justify-content:space-between; align-items:center; }
+.btn-add { background:transparent; color:#f0c040; border:1px solid #f0c040; padding:5px 12px; cursor:pointer; border-radius:4px; font-size:13px; }
+.btn-add:hover { background:#f0c040; color:#030b32; }
+.btn-remove { background:transparent; color:red; border:none; cursor:pointer; font-size:13px; font-weight:bold; }
+.counter-box { width:120px; height:100px; background:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:bold; border-radius:4px; color:#030b32; }
+.save-record-wrapper { display:flex; flex-direction:column; justify-content:flex-end; padding-bottom:10px; margin-left:10px; gap:8px; }
+.btn-save-record { background-color:white; color:#000; border:none; padding:22px 28px; font-size:20px; font-weight:bold; cursor:pointer; border-radius:6px; line-height:1.3; text-align:center; transition:background 0.2s ease; }
+.btn-save-record:hover { background-color:#f0c040; color:#030b32; }
+.save-msg { display:none; color:#f0c040; font-weight:bold; text-align:center; font-size:13px; padding:4px; }
+.admin-only { display:none !important; }
+.is-admin .admin-only { display:flex !important; }
+.elqa { background:#0a3d62; padding:30px; text-align:center; }
+.elqa h1 { color:white; margin-bottom:25px; }
+.elqa-links { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.elqa-links a { display:flex; align-items:center; justify-content:center; min-height:80px; background:white; color:#0a3d62; text-decoration:none; font-weight:bold; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.2); transition:0.3s ease; }
+.elqa-links a:hover { background:#1e90ff; color:white; transform:translateY(-5px); }
+@media (max-width:768px) { .elqa-links { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:480px) { .elqa-links { grid-template-columns:1fr; } }
+</style>
+
+<script>
+function getCookie(name) { let val=null; if(document.cookie){document.cookie.split(';').forEach(c=>{c=c.trim();if(c.startsWith(name+'='))val=decodeURIComponent(c.slice(name.length+1));});} return val; }
+function addHalqa() { const name=prompt('نیا حلقہ کا نام لکھیں:'); if(!name||!name.trim())return; document.getElementById('new-halqa-name').value=name.trim(); document.getElementById('add-halqa-form').submit(); }
+function removeHalqa() { const sel=document.getElementById('sel-halqa'); const halqaId=sel.value; const halqaName=sel.options[sel.selectedIndex]?.text; if(!halqaId){alert('⚠️ پہلے حلقہ select کریں!');return;} if(!confirm('"'+halqaName+'" حلقہ delete کریں؟'))return; const form=document.getElementById('delete-halqa-form'); form.action=`/elqa/shaher/delete-halqa/${halqaId}/`; form.submit(); }
+function resetSelect(selId,label){document.getElementById(selId).innerHTML=`<option value="">${label}</option>`;}
+function populateSelect(selId,members){const sel=document.getElementById(selId);members.forEach(m=>{const opt=document.createElement('option');opt.value=m.id;opt.text=m.name;sel.add(opt);});}
+function onHalqaChange() {
+    const sel=document.getElementById('sel-halqa'); const halqaId=sel.value;
+    document.getElementById('ctr-karkunan').textContent='...'; document.getElementById('ctr-rufaqa').textContent='...'; document.getElementById('ctr-umeedwar').textContent='...';
+    resetSelect('sel-karkunan','کل کارکنان'); resetSelect('sel-rufaqa','کل رفقاء'); resetSelect('sel-umeedwar','کل امیدوار');
+    if(!halqaId){ document.getElementById('ctr-karkunan').textContent='{{ total_karkunan }}'; document.getElementById('ctr-rufaqa').textContent='{{ total_rufaqa }}'; document.getElementById('ctr-umeedwar').textContent='{{ total_umeedwar }}'; return; }
+    fetch(`/get-halqa-counts/?halqa_id=${halqaId}&elqa_key=shaher`)
+        .then(res=>res.json()).then(data=>{ document.getElementById('ctr-karkunan').textContent=data.karkunan.length; document.getElementById('ctr-rufaqa').textContent=data.rufaqa.length; document.getElementById('ctr-umeedwar').textContent=data.umeedwar.length; populateSelect('sel-karkunan',data.karkunan); populateSelect('sel-rufaqa',data.rufaqa); populateSelect('sel-umeedwar',data.umeedwar); })
+        .catch(err=>{console.error(err); document.getElementById('ctr-karkunan').textContent='!'; document.getElementById('ctr-rufaqa').textContent='!'; document.getElementById('ctr-umeedwar').textContent='!';});
+}
+function addMember(memberType,selId,ctrId,label) {
+    const halqaId=document.getElementById('sel-halqa').value;
+    if(!halqaId){alert('⚠️ پہلے کل حلقہ میں سے حلقہ select کریں!');return;}
+    const name=prompt(label+' کا نام لکھیں:'); if(!name||!name.trim())return;
+    fetch(`/elqa/shaher/add-member-ajax/`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded','X-CSRFToken':getCookie('csrftoken')},body:new URLSearchParams({name:name.trim(),member_type:memberType,halqa_id:halqaId})})
+    .then(res=>res.json()).then(data=>{if(data.success){document.getElementById('ctr-karkunan').textContent=data.karkunan;document.getElementById('ctr-rufaqa').textContent=data.rufaqa;document.getElementById('ctr-umeedwar').textContent=data.umeedwar;const sel=document.getElementById(selId);const opt=document.createElement('option');opt.value=data.member_id;opt.text=data.name;sel.add(opt);}else{alert('Error: '+(data.error||'Something went wrong'));}})
+    .catch(err=>{console.error(err);alert('Network error');});
+}
+function removeFromSelect(selId,ctrId){const sel=document.getElementById(selId);if(sel.options.length<=1){alert('List خالی ہے۔');return;}const idx=sel.selectedIndex;if(idx<=0){alert('پہلے کوئی نام select کریں۔');return;}if(!confirm('"'+sel.options[idx].text+'" ہٹائیں؟'))return;sel.remove(idx);const ctr=document.getElementById(ctrId);ctr.textContent=Math.max(0,parseInt(ctr.textContent)-1);}
+function saveRecord(){const sel=document.getElementById('sel-halqa');if(!sel.value){alert('⚠️ پہلے حلقہ select کریں!');return;}const halqaName=sel.options[sel.selectedIndex].text;const k=document.getElementById('ctr-karkunan').textContent;const r=document.getElementById('ctr-rufaqa').textContent;const u=document.getElementById('ctr-umeedwar').textContent;const msg=document.getElementById('save-msg');msg.textContent=`✅ ${halqaName} | کارکنان: ${k} | رفقاء: ${r} | امیدوار: ${u}`;msg.style.display='block';setTimeout(()=>msg.style.display='none',4000);}
+</script>
+
+<div class="images-row">
+    <div class="image-card">
+        <img src="{% static 'team Shaher/asim.jpg' %}">
+        <span class="card-label">عاصم خان</span>
+        <p>President Elqa Shaher</p>
+        
+    </div>
+   
+  
+</div>
+
+<hr class="section-divider">
+
+<div class="dashboard {% if is_admin %}is-admin{% endif %}">
+    <div class="dashboard-top">
+        <div class="box">
+            <select id="sel-halqa" onchange="onHalqaChange()">
+                <option value="">-- کل حلقہ --</option>
+                {% for halqa in halqas %}<option value="{{ halqa.id }}">{{ halqa.name }}</option>{% endfor %}
+            </select>
+            <div class="box-actions admin-only">
+                <button class="btn-add" onclick="addHalqa()">add button</button>
+                <button class="btn-remove" onclick="removeHalqa()">remove</button>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-bottom">
+        <div class="box-wrapper">
+            <div class="box">
+                <select id="sel-karkunan"><option value="">کل کارکنان</option></select>
+                <div class="box-actions admin-only">
+                    <button class="btn-add" onclick="addMember('karkun','sel-karkunan','ctr-karkunan','کارکن')">add button</button>
+                    <button class="btn-remove" onclick="removeFromSelect('sel-karkunan','ctr-karkunan')">remove</button>
+                </div>
+            </div>
+            <span class="counter-label">COUNTER</span>
+            <div class="counter-box" id="ctr-karkunan">{{ total_karkunan }}</div>
+        </div>
+        <div class="box-wrapper">
+            <div class="box">
+                <select id="sel-rufaqa"><option value="">کل رفقاء</option></select>
+                <div class="box-actions admin-only">
+                    <button class="btn-add" onclick="addMember('rafiq','sel-rufaqa','ctr-rufaqa','رفیق')">add button</button>
+                    <button class="btn-remove" onclick="removeFromSelect('sel-rufaqa','ctr-rufaqa')">remove</button>
+                </div>
+            </div>
+            <span class="counter-label">COUNTER</span>
+            <div class="counter-box" id="ctr-rufaqa">{{ total_rufaqa }}</div>
+        </div>
+        <div class="box-wrapper">
+            <div class="box">
+                <select id="sel-umeedwar"><option value="">کل امیدوار</option></select>
+                <div class="box-actions admin-only">
+                    <button class="btn-add" onclick="addMember('umeedwar','sel-umeedwar','ctr-umeedwar','امیدوار')">add button</button>
+                    <button class="btn-remove" onclick="removeFromSelect('sel-umeedwar','ctr-umeedwar')">remove</button>
+                </div>
+            </div>
+            <span class="counter-label">COUNTER</span>
+            <div class="counter-box" id="ctr-umeedwar">{{ total_umeedwar }}</div>
+        </div>
+        <div class="save-record-wrapper admin-only">
+            <button class="btn-save-record" onclick="saveRecord()">save<br>record</button>
+            <div class="save-msg" id="save-msg"></div>
+        </div>
+    </div>
+</div>
+
+<div class="elqa">
+    <h1>Total Elqa</h1>
+    <div class="elqa-links">
+        <a href="{% url 'elqa_page' 'collage' %}">Elqa Collage</a>
+        <a href="{% url 'elqa_page' 'shaher' %}">Elqa Shaher</a>
+        <a href="{% url 'elqa_page' 'talash' %}">Elqa Talash</a>
+        <a href="{% url 'elqa_page' 'colleges' %}">Elqa Colleges</a>
+        <a href="{% url 'elqa_page' 'sindhakhall' %}">Elqa Sindhakhall</a>
+        <a href="{% url 'elqa_page' 'bazam' %}">Bazam</a>
+    </div>
+</div>
+
+<form id="add-halqa-form" method="POST" action="{% url 'add_halqa' 'shaher' %}" style="display:none;">
+    {% csrf_token %}<input type="hidden" name="name" id="new-halqa-name">
+</form>
+<form id="delete-halqa-form" method="POST" style="display:none;">{% csrf_token %}</form>
+
+{% endblock %}

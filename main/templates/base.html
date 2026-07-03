@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IJT</title>
+    <style>
+
+        /* ================= GLOBAL STYLES ================= */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #030b32;
+            padding: 12px 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid #f0c040;
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f0c040;
+            letter-spacing: 1px;
+            font-family: 'Georgia', serif;
+        }
+
+        .navbar ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            font-size: 16px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 500;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 6px 12px;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #f0c040;
+            color: #030b32;
+        }
+
+        /* ================= FOOTER ================= */
+        footer {
+            background: #1876d2;
+            color: white;
+            text-align: center;
+            padding: 40px;
+            margin:30px;
+           width:auto;
+            height:100px;
+        }
+
+        .footer-logo {
+            width: 40px;
+         
+        }
+
+        {% block extra_css %}{% endblock %}
+
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="{% static 'images/download.jpg' %}" class="nav-logo">
+            <div class="nav-title">Islamia Jamiat Talaba Timergara Moqam</div>
+        </div>
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'about-timergara-moqam' %}">About Timergara Moqam</a></li>
+            <li><a href="{% url 'updates' %}">Updates</a></li>
+            {% if user.is_authenticated %}
+<li>
+    <a href="{% url 'logout' %}"
+       style="color:#ff6b6b;font-weight:bold;">
+        Logout
+    </a>
+</li>
+{% endif %}
+        </ul>
+    </nav>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    {% block content %}{% endblock %}
+
+    <!-- ================= FOOTER ================= -->
+    {% block footer %}
+
+
+
+
+
+  
+
+
+    <footer>
+        <img src="{% static 'images/download.jpg' %}" class="footer-logo">
+        <h3>Islami Jamiat-e-Talaba</h3>
+        <p>Timergara Moqam</p>
+    </footer>
+    {% endblock %}
+
+
+
+
+</body>
+</html>

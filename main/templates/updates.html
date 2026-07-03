@@ -1,0 +1,486 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+body { background-color:#1a1a2e; margin:0; padding:0; }
+
+/* ─── Page Layout ─── */
+.page-wrapper {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+}
+
+/* ─── Page Header ─── */
+.page-header {
+    text-align: center;
+    padding: 20px 0 16px;
+}
+.page-header h1 {
+    color: #f0c040;
+    font-size: 22px;
+    font-family: 'Noto Nastaliq Urdu', serif;
+    direction: rtl;
+    margin: 0;
+}
+
+.section-divider {
+    border: none;
+    border-top: 1px solid rgba(240,192,64,0.2);
+    margin: 0 0 20px;
+}
+
+/* ─── Post Box (Facebook style) ─── */
+.post-box {
+    background: #0d1a4a;
+    border-radius: 12px;
+    border: 1px solid rgba(240,192,64,0.25);
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.post-box-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.post-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f0c040, #d4a800);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #030b32;
+    flex-shrink: 0;
+}
+
+.post-box-header span {
+    color: #f0c040;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Noto Nastaliq Urdu', serif;
+    direction: rtl;
+}
+
+/* ─── Post Form ─── */
+.post-form textarea {
+    width: 100%;
+    background: #030b32;
+    color: #ffffff;
+    border: 1px solid rgba(240,192,64,0.3);
+    border-radius: 22px;
+    padding: 12px 18px;
+    font-size: 14px;
+    box-sizing: border-box;
+    direction: rtl;
+    font-family: 'Noto Nastaliq Urdu', serif;
+    outline: none;
+    resize: none;
+    min-height: 50px;
+    transition: min-height 0.2s, border 0.2s;
+}
+
+.post-form textarea:focus {
+    min-height: 100px;
+    border-color: #f0c040;
+}
+
+.post-form textarea::placeholder {
+    color: #aab0c4;
+}
+
+.post-form input[type="text"] {
+    width: 100%;
+    background: #030b32;
+    color: #ffffff;
+    border: 1px solid rgba(240,192,64,0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    box-sizing: border-box;
+    direction: rtl;
+    font-family: 'Noto Nastaliq Urdu', serif;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+.post-form input[type="text"]:focus {
+    border-color: #f0c040;
+}
+
+.post-form input[type="text"]::placeholder {
+    color: #aab0c4;
+}
+
+.post-form-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin: 12px 0;
+}
+
+.post-form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.post-form-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.file-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #aab0c4;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.file-label:hover {
+    background: rgba(255,255,255,0.08);
+    color: #f0c040;
+}
+
+.file-label input[type="file"] {
+    display: none;
+}
+
+.file-name {
+    color: #f0c040;
+    font-size: 11px;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-post {
+    background: #f0c040;
+    color: #030b32;
+    border: none;
+    padding: 8px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-post:hover { background: #d4a800; }
+.btn-post:disabled {
+    background: rgba(240,192,64,0.3);
+    color: #aab0c4;
+    cursor: not-allowed;
+}
+
+/* ─── Feed Cards (Facebook post style) ─── */
+.feed {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.feed-card {
+    background: #0d1a4a;
+    border-radius: 12px;
+    border: 1px solid rgba(240,192,64,0.2);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    transition: box-shadow 0.2s;
+}
+
+.feed-card:hover {
+    box-shadow: 0 4px 16px rgba(240,192,64,0.15);
+}
+
+/* Card Header — like Facebook post header */
+.feed-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px 8px;
+}
+
+.feed-card-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.feed-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f0c040, #d4a800);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: #030b32;
+    flex-shrink: 0;
+}
+
+.feed-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.feed-username {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.feed-meta {
+    color: #aab0c4;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.feed-badge {
+    background: rgba(240,192,64,0.15);
+    color: #f0c040;
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    border: 1px solid rgba(240,192,64,0.3);
+    text-transform: uppercase;
+}
+
+/* Card Body */
+.feed-card-body {
+    padding: 4px 16px 12px;
+    direction: rtl;
+}
+
+.feed-card-body h3 {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0 0 6px;
+    font-family: 'Noto Nastaliq Urdu', serif;
+}
+
+.feed-card-body p {
+    color: #d0d5e8;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.6;
+    font-family: 'Noto Nastaliq Urdu', serif;
+}
+
+/* Card Image */
+.feed-card-img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+    margin-top: 10px;
+}
+
+/* Card Footer */
+.feed-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 4px;
+}
+
+.feed-date {
+    color: #aab0c4;
+    font-size: 11px;
+}
+
+.btn-delete {
+    background: transparent;
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-delete:hover {
+    background: #ff6b6b;
+    color: white;
+}
+
+/* ─── Empty state ─── */
+.no-updates {
+    text-align: center;
+    color: #aab0c4;
+    font-size: 15px;
+    padding: 60px 20px;
+    font-family: 'Noto Nastaliq Urdu', serif;
+    direction: rtl;
+}
+
+.no-updates-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+</style>
+
+<script>
+// File name show کرو
+function showFileName(input) {
+    const label = document.getElementById('file-name-label');
+    if (input.files && input.files[0]) {
+        label.textContent = input.files[0].name;
+    } else {
+        label.textContent = '';
+    }
+}
+
+// Textarea auto-resize
+document.addEventListener('DOMContentLoaded', function() {
+    const ta = document.getElementById('post-textarea');
+    if (ta) {
+        ta.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    }
+});
+</script>
+
+<div class="page-wrapper">
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>تازہ ترین اپڈیٹس</h1>
+    </div>
+    <hr class="section-divider">
+
+    <!-- Post Box — صرف elqa admin کو دکھے -->
+    {% if is_admin %}
+    <div class="post-box">
+        <div class="post-box-header">
+            <div class="post-avatar">
+                {{ elqa_key|slice:":1"|upper }}
+            </div>
+            <span>{{ elqa_key|title }} Admin</span>
+        </div>
+
+        <form class="post-form" method="POST"
+              action="{% url 'add_update' elqa_key %}"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <input type="text" name="title"
+                   placeholder="عنوان لکھیں..."
+                   required>
+
+            <textarea id="post-textarea" name="content" rows="3"
+                      placeholder="آپ کے ذہن میں کیا ہے؟"
+                      required></textarea>
+
+            <hr class="post-form-divider">
+
+            <div class="post-form-actions">
+                <div class="post-form-left">
+                    <label class="file-label">
+                        📷 تصویر شامل کریں
+                        <input type="file" name="image"
+                               accept="image/*"
+                               onchange="showFileName(this)">
+                    </label>
+                    <span class="file-name" id="file-name-label"></span>
+                </div>
+                <button type="submit" class="btn-post">Post کریں</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Feed -->
+    {% if updates %}
+    <div class="feed">
+        {% for update in updates %}
+        <div class="feed-card">
+
+            <!-- Header -->
+            <div class="feed-card-header">
+                <div class="feed-card-user">
+                    <div class="feed-avatar">
+                        {{ update.elqa|slice:":1"|upper }}
+                    </div>
+                    <div class="feed-user-info">
+                        <span class="feed-username">Elqa {{ update.elqa|title }}</span>
+                        <div class="feed-meta">
+                            <span>{{ update.created_at|date:"d M Y" }}</span>
+                            <span class="feed-badge">{{ update.elqa }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete button — صرف اسی elqa کا admin -->
+                {% if is_superuser or is_admin and update.elqa == elqa_key %}
+                <form method="POST"
+                      action="{% url 'delete_update' update.elqa update.id %}"
+                      style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-delete"
+                            onclick="return confirm('یہ post delete کریں؟')">
+                        🗑 Delete
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+
+            <!-- Body -->
+            <div class="feed-card-body">
+                <h3>{{ update.title }}</h3>
+                <p>{{ update.content }}</p>
+            </div>
+
+            <!-- Image -->
+            {% if update.image %}
+            <img class="feed-card-img"
+                 src="{{ update.image.url }}"
+                 alt="{{ update.title }}">
+            {% endif %}
+
+            <!-- Footer -->
+            <div class="feed-card-footer">
+                <span class="feed-date">🕐 {{ update.created_at|date:"d M Y — H:i" }}</span>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="no-updates">
+        <div class="no-updates-icon">📭</div>
+        ابھی کوئی اپڈیٹ موجود نہیں۔
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+.login-wrapper {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #030b32;
+}
+.login-box {
+    background: #0d1a4a;
+    border: 2px solid #f0c040;
+    border-radius: 12px;
+    padding: 40px;
+    width: 360px;
+    text-align: center;
+}
+.login-box h2 {
+    color: #f0c040;
+    margin-bottom: 30px;
+    font-family: 'Georgia', serif;
+}
+
+/* ✅ Input wrapper for eye icon */
+.input-group {
+    position: relative;
+    margin-bottom: 16px;
+}
+.input-group input {
+    width: 100%;
+    padding: 10px 40px 10px 14px;
+    background: #030b32;
+    border: 1px solid #f0c040;
+    border-radius: 6px;
+    color: white;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+.input-group input::placeholder {
+    color: #aaa;
+}
+.eye-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #f0c040;
+    font-size: 18px;
+    user-select: none;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 10px;
+    background: #f0c040;
+    color: #030b32;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 6px;
+}
+.login-box button:hover { background: #d4a800; }
+.error-msg {
+    color: #ff6b6b;
+    margin-bottom: 14px;
+    font-size: 14px;
+}
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-box">
+        <img src="{% static 'images/download.jpg' %}"
+             style="width:70px;border-radius:50%;border:2px solid #f0c040;margin-bottom:20px;">
+        <h2>IJT Login</h2>
+
+        {% if messages %}
+            {% for msg in messages %}
+                <p class="error-msg">{{ msg }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="input-group">
+                <input type="text" id="username" name="username" placeholder="Username" required>
+                <!-- no eye icon for username, it's already visible text -->
+            </div>
+
+            <!-- Password with eye icon -->
+            <div class="input-group">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <span class="eye-icon" onclick="togglePassword()">👁️</span>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function togglePassword() {
+    const input = document.getElementById('password');
+    const icon  = document.querySelector('.eye-icon');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.textContent = '🙈';   // hide icon
+    } else {
+        input.type = 'password';
+        icon.textContent = '👁️';   // show icon
+    }
+}
+</script>
+{% endblock %}

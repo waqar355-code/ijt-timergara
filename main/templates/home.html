@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+
+    /* ================= MOTTO SECTION ================= */
+    .motto-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 40px 50px;
+        background: #f5f5f7;
+        margin: 40px auto;
+        border-radius: 18px;
+        gap: 60px;
+        max-width: 900px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    .motto-logo {
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+
+    .motto-text {
+        flex: 1;
+        text-align: center;
+    }
+
+    .motto-text h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 20px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .motto-text p {
+        font-size: 2.15rem;
+        font-style: italic;
+        color: #333;
+        line-height: 2.2;
+        font-family: 'Georgia', serif;
+    }
+
+    /* ================= BUILDING + INTRO ================= */
+    .intro-container {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: space-between;
+        padding: 40px;
+        gap: 30px;
+        background: #fff;
+        margin: 20px;
+        border-radius: 10px;
+    }
+
+    .building {
+        width: 45%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .intro-text {
+        width: 50%;
+        font-size: 2.15rem;
+        font-family: 'Georgia', serif;
+    }
+
+    /* ================= LEADERSHIP ================= */
+    .leadership {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .leaders {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .leader-card {
+        background: white;
+        padding: 20px;
+        width: 250px;
+        border-radius: 10px;
+        transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .leader-card:hover {
+        background: #1a73e8;
+        color: white;
+    }
+
+    .leader-card img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    /* ================= STRENGTH ================= */
+    .strength {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .strength-boxes {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .strength-boxes .box {
+        background: white;
+        padding: 20px;
+        width: 200px;
+        border-radius: 10px;
+    }
+
+{% endblock %}
+
+
+{% block content %}
+
+    
+    <section class="motto-container">
+        <img src="{% static 'images/download.jpg' %}" class="motto-logo">
+        <div class="motto-text">
+            <h2>Our Motto</h2>
+            <p>
+                "To seek the pleasure of Allah Almighty by ordering human life
+                in accordance with the principles laid down by Allah and His
+                Messenger Muhammad ﷺ."
+            </p>
+        </div>
+    </section>
+
+    
+    <section class="intro-container">
+        <img src="{% static 'images/bulding.jpg' %}" class="building">
+        <div class="intro-text">
+            <h2>Introduction</h2>
+            <p>
+                Islami Jamiat-e-Talaba established on December 23, 1947, is the largest
+                and most influential student organization in Pakistan. It was founded by
+                a group of 25 students gathered in Lahore with the vision of creating an
+                Islamic society based on the teachings of the Quran and Sunnah.
+            </p>
+        </div>
+    </section>
+
+    <!-- ================= LEADERSHIP ================= -->
+    <section class="leadership">
+        <h2>Our Leadership</h2>
+        <div class="leaders">
+
+            <div class="leader-card">
+                <img src="{% static 'images/waseem.jpg' %}">
+                <h3>Sahibzada Wasim Haider</h3>
+                <p>Central President Islami Jamiat-e-Talaba Pakistan</p>
+                <p>PhD in International Relations</p>
+            </div>
+
+            <div class="leader-card">
+                <img src="{% static 'images/asfndayr.jpg' %}">
+                <h3>Asfandyar Izzat</h3>
+                <p>President Islami Jamiat-e-Talaba KP</p>
+                <p>M Phil Education</p>
+            </div>
+
+            <div class="leader-card">
+                <img src="{% static 'images/majeed.jpg' %}">
+                <h3>Abdul Majeed khan</h3>
+                <p>President Islami Jamiat-e-Talaba Timergara Moqam</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= STRENGTH ================= 
+    <section class="strength">
+        <h2>Our Strength</h2>
+        <div class="strength-boxes">
+            <div class="box">
+                <h1>500+</h1>
+                <p>Members</p>
+            </div>
+            <div class="box">
+                <h1>5</h1>
+                <p>Units</p>
+            </div>
+        </div>
+    </section>
+    -->
+
+{% endblock %}

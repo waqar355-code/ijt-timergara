@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IJT</title>
+   
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    </body>
+
+
+
+
+
+
+<style>
+/* Leadership Section */
+.leadership{
+    padding:50px 20px;
+    text-align:center;
+    background:#f5f5f5;
+}
+
+.leadership h2{
+    color:#0a3d62;
+    margin-bottom:40px;
+    font-size:32px;
+}
+
+/* Top Row (Majeed & Nayeem) */
+.top-leaders{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    margin-bottom:50px;
+    flex-wrap:wrap;
+}
+
+/* Remaining Leaders */
+.leaders{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:25px;
+}
+
+/* Card Design */
+.leader-card{
+    background:white;
+    width:250px;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    transition:all 0.3s ease;
+}
+
+.leader-card img{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:15px;
+}
+
+.leader-card h3{
+    color:#0a3d62;
+    margin-bottom:10px;
+}
+
+.leader-card p{
+    color:#555;
+    font-size:14px;
+}
+
+/* Hover Effect */
+.leader-card:hover{
+    background:#0a3d62;
+    transform:translateY(-8px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+.leader-card:hover h3,
+.leader-card:hover p{
+    color:white;
+}
+
+@media(max-width:768px){
+    .top-leaders{
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .leader-card{
+        width:90%;
+        max-width:300px;
+    }
+}
+
+/*elqa code */
+
+.elqa {
+    background: #0a3d62;
+    padding: 20px;
+}
+
+/* GRID layout */
+.elqa ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 👈 2 items per row */
+    gap: 20px; /* space between items */
+}
+
+/* Items */
+.elqa ul li {
+    text-align: center;
+}
+
+/* Links */
+.elqa ul li a {
+    display: block;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    transition: 0.3s;
+}
+
+/* Hover */
+.elqa ul li a:hover {
+    background: #1e90ff;
+    transform: scale(1.05);
+}
+
+
+
+/* ===== Total Elqa Grid ===== */
+
+.elqa{
+    background:#0a3d62;
+    padding:30px;
+    text-align:center;
+}
+
+.elqa h1{
+    color:white;
+    margin-bottom:25px;
+}
+
+/* Grid */
+.elqa ul{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+    padding:0;
+    margin:0;
+}
+
+/* Grid Boxes */
+.elqa ul a{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:80px;
+
+    background:white;
+    color:#0a3d62;
+    text-decoration:none;
+    font-weight:bold;
+    border-radius:12px;
+
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    transition:0.3s;
+}
+
+/* Hover */
+.elqa ul a:hover{
+    background:#1e90ff;
+    color:white;
+    transform:translateY(-5px);
+}
+
+/* Mobile */
+@media (max-width:768px){
+    .elqa ul{
+        grid-template-columns:repeat(2, 1fr);
+    }
+}
+
+@media (max-width:480px){
+    .elqa ul{
+        grid-template-columns:1fr;
+    }
+}
+
+
+</style>
+
+<section class="leadership">
+
+    <h2>Team Timergara Moqam</h2>
+
+    <!-- Top Row -->
+    <div class="top-leaders">
+
+        <div class="leader-card">
+            <img src="{% static 'team/majeed.jpg' %}" alt="Majeed">
+            <h3>Majeed Khan</h3>
+            <p>President Islami Jamiat-e-Talaba Timergara Moqam</p>
+        </div>
+
+        <div class="leader-card">
+            <img src="{% static 'team/nayeem.jpg' %}" alt="Nayeem">
+            <h3>Nayeem Khan</h3>
+            <p>Secretary Islami Jamiat-e-Talaba Timergara Moqam</p>
+        </div>
+
+    </div>
+
+    <!-- Remaining Members -->
+    <div class="leaders">
+
+        <div class="leader-card">
+            <img src="{% static 'team/shohaib.jpg' %}" alt="">
+            <h3>Shohaib Khan</h3>
+            <p>sadar bazami shaheen </p>
+        </div>
+
+        <div class="leader-card">
+            <img src="{% static 'team/ahmad zaib.jpg' %}" alt="">
+            <h3>Ahmad Zaib</h3>
+            <p>President organization  department</p>
+        </div>
+
+        <div class="leader-card">
+            <img src="{% static 'team/waqar.jpg' %}" alt="">
+            <h3>Waqar Zada</h3>
+            <p> Secretary  organization  department</p>
+        </div>
+
+        <div class="leader-card">
+            <img src="{% static 'team/talha.jpg' %}" alt="">
+            <h3>talha</h3>
+            <p>Incharge Finance</p>
+        </div>
+
+     <div class="leader-card">
+     <img src="{% static 'team collages/nazam.jpg' %}" class="image">
+     
+         <h3>nazam mu din</h3>
+            <p>president  Elqa collages</p>
+        </div>
+
+
+
+        <div class="leader-card">
+            <img src="{% static 'team/fawad.jpg' %}" alt="">
+            <h3>Fawad Khan</h3>
+            <p>President Elqa College</p>
+        </div>
+
+        <div class="leader-card">
+            <img src="{% static 'team/asim.jpg' %}" alt="">
+            <h3>Asim Khan</h3>
+            <p>President Elqa Shaher</p>
+        </div>
+
+        <div class="leader-card">
+            <img src="{% static 'team/junaid.jpg' %}" alt="">
+            <h3>Junaid Khan</h3>
+            <p>President Elqa Talash</p>
+        </div>
+
+        <div class="leader-card">
+            <img src="{% static 'team/zamil.jpg' %}" alt="">
+            <h3>zamil Khan</h3>
+            <p>President Elqa sindha</p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<div class="elqa">
+<h1> Total Elqa</h1>
+         <ul>
+    <a href="{% url 'elqa_page' 'collage' %}">Elqa Collage</a>
+<a href="{% url 'elqa_page' 'shaher' %}">Elqa Shaher</a>
+<a href="{% url 'elqa_page' 'talash' %}">Elqa Talash</a>
+<a href="{% url 'elqa_page' 'colleges' %}">Elqa Colleges</a>
+<a href="{% url 'elqa_page' 'sindhakhall' %}">Elqa Sindhakhall</a>
+<a href="{% url 'elqa_page' 'bazam' %}">Bazam</a>
+   </ul>
+</div>
+
+</div>
+
+
+</body>
+</html>
+
+{% endblock %}
